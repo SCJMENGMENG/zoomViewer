@@ -10,9 +10,17 @@ import {
     Modal,
     TouchableOpacity, Dimensions,
     ActivityIndicator, CameraRoll,
+    Platform,
 } from 'react-native';
 
 import ImageViewer from 'react-native-image-zoom-viewer';
+
+
+// const RNFS = require('react-native-fs');
+// const storeLocation = `${RNFS.DocumentDirectoryPath}`;
+// let pathName = new Date().getTime() + ".png"
+// let downloadDest = `${storeLocation}/${pathName}`;
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 export default class LookPhotoModal extends Component {
@@ -42,14 +50,30 @@ export default class LookPhotoModal extends Component {
         )
     }
     savePhoto() {
-        let index = this.photoIndex;//this.props.curentImage;
-        let url = this.props.imaeDataUrl[index];
-        let promise = CameraRoll.saveToCameraRoll(url);
-        promise.then(function (result) {
-            alert("已保存到系统相册")
-        }).catch(function (error) {
-            alert('保存失败！\n' + error);
-        });
+        if (Platform.OS === 'ios'){
+            let index = this.photoIndex;//this.props.curentImage;
+            let url = this.props.imaeDataUrl[index];
+            let promise = CameraRoll.saveToCameraRoll(url);
+            promise.then(function (result) {
+                alert("已保存到系统相册")
+            }).catch(function (error) {
+                alert('保存失败！\n' + error);
+            });
+        } else {
+            // const ret = RNFS.downloadFile({fromUrl: this.props.imaeDataUrl[this.photoIndex], toFile: downloadDest});
+            // ret.promise.then(res => {
+            //     if (res && res.statusCode === 200) {
+            //         var promise = CameraRoll.saveToCameraRoll("file://" + downloadDest);
+            //         promise.then(function (result) {
+            //             console.log("图片已保存至相册")
+            //             alert("图片已保存至相册")
+            //         }).catch(function (error) {
+            //             console.log("保存失败")
+            //             alert('保存失败')
+            //         })
+            //     }
+            // })
+        }
     }
 
 
